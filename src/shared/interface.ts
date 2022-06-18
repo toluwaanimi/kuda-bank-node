@@ -3,5 +3,5 @@ export interface IResponse{
 
     message: string;
 
-    data?: [] | Record<string, any>;
+    data?: any;
 }

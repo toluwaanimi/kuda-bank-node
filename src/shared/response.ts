@@ -4,7 +4,7 @@ import {IResponse} from "./interface";
 export class ResponseHandler {
     static success(data: any): Promise<IResponse> {
         return Promise.resolve({
-            status : data.Status,
+            status : true,
             message : data.Message,
             data : data.Data
         });
