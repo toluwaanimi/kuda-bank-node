@@ -1,0 +1,37 @@
+{
+  "name": "kuda-bank-node",
+  "version": "0.0.1",
+  "description": "",
+  "main": "build/index.js",
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {
+    "test": "jest --config jestconfig.json --coverage",
+    "build": "tsc -d",
+    "type-check": "tsc --noEmt",
+    "format": "prettier --write src/**/*.ts",
+    "lint": "tslint -p tsconfig.json",
+    "preversion": "npm run lint",
+    "release": "standard-version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toluwaanimi/kuda-bank-node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toluwaanimi/kuda-bank-node/issues"
+  },
+  "homepage": "https://github.com/toluwaanimi/kuda-bank-node#readme",
+  "dependencies": {
+    "@types/node": "^18.0.0",
+    "axios": "^0.27.2",
+    "crypto": "^1.0.1",
+    "node-jsencrypt": "^1.0.0",
+    "rsa-xml": "^0.1.5",
+    "shortid": "^2.2.16"
+  }
+}
