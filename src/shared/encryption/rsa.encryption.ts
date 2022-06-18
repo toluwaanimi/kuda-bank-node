@@ -1,9 +1,11 @@
 import {Helper} from "../helper";
+// @ts-ignore
+import * as JSENCRYPT from 'node-jsencrypt'
 
-const JSEncrypt = require('node-jsencrypt')
-const RSAXML = require('rsa-xml')
+// @ts-ignore
+import * as RSAXML  from 'rsa-xml'
 
-const jsEncrypt = new JSEncrypt()
+const jsEncrypt = new JSENCRYPT()
 
 export class RsaEncryption{
     static encrypt(text: string, publicKey: any){

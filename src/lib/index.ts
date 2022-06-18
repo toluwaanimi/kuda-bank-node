@@ -2,8 +2,7 @@ import axios from "axios";
 import {AesEncryption} from "../shared/encryption/aesEncryption";
 import {RsaEncryption} from "../shared/encryption/rsa.encryption";
 import {ResponseHandler} from "../shared/response";
-
-const shortid = require('shortid')
+import * as shortid from 'shortid'
 
 const LIVE_BASE_URL = 'https://kuda-openapi.kuda.com/v1';
 const TEST_BASE_URL = 'https://kuda-openapi-uat.kudabank.com/v1';
@@ -45,9 +44,8 @@ export class Kuda {
             // plaintext = RSA decrypt password with our privateKey
             const plaintext = RsaEncryption.decrypt(encryptedResponse.password, this.privateKey).toString()
             // data = AES decrypt data with plaintext
-            let data = await AesEncryption.decrypt(encryptedResponse.data, plaintext)
-            data = JSON.parse(data)
-            return ResponseHandler.success(data)
+            const aesResponse = await AesEncryption.decrypt(encryptedResponse.data, plaintext)
+            return ResponseHandler.success(JSON.parse(aesResponse))
         } catch (e: any) {
             return ResponseHandler.error(e)
         }
