@@ -6,7 +6,14 @@ export class ResponseHandler {
         return Promise.resolve({
             status : true,
             message : data.Message,
-            data : data.Data
+            data : {
+                ...data?.Data,
+                TransactionReference : data?.TransactionReference ? data.TransactionReference : undefined
+            },
+            meta : {
+                ResponseCode : data?.ResponseCode ? data.ResponseCode : undefined,
+                RequestReference : data?.RequestReference ? data.RequestReference : undefined
+            }
         });
     }
 
