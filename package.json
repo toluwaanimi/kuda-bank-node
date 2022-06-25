@@ -1,6 +1,6 @@
 {
   "name": "kuda-bank-node",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "build/lib/index.js",
   "files": [

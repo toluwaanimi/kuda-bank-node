@@ -7,7 +7,7 @@ export class ResponseHandler {
             status : true,
             message : data.Message,
             data : {
-                ...data?.Data,
+                ...data.Data,
                 TransactionReference : data?.TransactionReference ? data.TransactionReference : undefined
             },
             meta : {
