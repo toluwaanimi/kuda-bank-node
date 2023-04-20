@@ -10,11 +10,15 @@
 import { Kuda } from 'kuda-bank-node'
 const fs = require("fs");
 
-const publicKey = fs.readFileSync("./kuda.public.xml"); // or path to your kuda public key
-const privateKey = fs.readFileSync("./path-to-private-key.xml"); // or path to your kuda kuda private key
-const clientKey = "name-of-private-key-file";
 
-const kuda  = new Kuda(publicKey,privateKey,clientKey,true)
+const email = ""
+const clientKey = "name-of-private-key-file";
+const accessToken = ""
+const kuda  = new Kuda({
+    email: email,
+    clientApiKey: clientKey,
+    accessToken: accessToken
+},false)
 const reference  = Math.floor(Math.random() * 1000000000000 + 1).toString()
 kuda.request('Admin_Retrieve_Virtual_Accounts',reference ,{
     PageSize: 10,

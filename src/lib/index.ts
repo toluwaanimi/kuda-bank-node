@@ -4,48 +4,64 @@ import {RsaEncryption} from "../shared/encryption/rsa.encryption";
 import {ResponseHandler} from "../shared/response";
 import * as shortid from 'shortid'
 
-const LIVE_BASE_URL = 'https://kuda-openapi.kuda.com/v1';
-const TEST_BASE_URL = 'https://kuda-openapi-uat.kudabank.com/v1';
+const LIVE_BASE_URL = 'https://kuda-openapi.kuda.com/v2.1';
+const TEST_BASE_URL = 'https://kuda-openapi-uat.kudabank.com/v2.1';
 
 export class Kuda {
-   private readonly publicKey: string
-   private privateKey: string
-   private readonly clientKey: string
-   private readonly url: string = ""
+    private readonly email: string
+    private readonly clientApiKey: string
+    private readonly url: string = ""
+    private readonly accessToken: string = ""
 
-    constructor(publicKey: any, privateKey: any, clientKey: string, isProduction: boolean = false) {
-        if (!publicKey || !privateKey || !clientKey) {
+    constructor(credentials : {
+        email?: string,
+        clientApiKey?: string
+        accessToken?: string
+    }, isProduction: boolean = false) {
+        if (
+            (credentials && !!credentials.email && !!credentials.clientApiKey) || (credentials && !!credentials.accessToken)) {
             throw new Error('missing credentials, please pass in your credentials');
         }
-        this.publicKey = publicKey.toString()
-        this.privateKey = privateKey.toString()
-        this.clientKey = clientKey
+        this.email = credentials.email?.toLowerCase() || ""
+        this.clientApiKey = credentials.clientApiKey?.toString() || ""
         this.url = isProduction ? LIVE_BASE_URL : TEST_BASE_URL
+        this.accessToken = credentials.accessToken || ""
+    }
+
+    async generateSecret() {
+        try {
+            const response = (await axios.post(this.url + "/Account/GetToken", {
+                "email": this.email,
+                "apiKey": this.clientApiKey
+            })).data
+            return {
+                status: true,
+                data: {
+                    token: response
+                }
+            }
+        } catch (e) {
+            return {
+                status: false,
+                data: {
+                    token: ""
+                }
+            }
+        }
     }
 
     async request(serviceType: string, requestRef: string, data: Record<string, any>) {
-        const password = `${this.clientKey}-${shortid.generate().substring(0, 5)}`
-
-        const payload = JSON.stringify({
-            serviceType,
-            requestRef,
-            data
-        })
-        const encryptedPayload = await AesEncryption.encrypt(payload, password)
-        const encryptedPassword = RsaEncryption.encrypt(password, this.publicKey)
         try {
-            const {data: encryptedResponse} = await axios.post(this.url, {
-                data: encryptedPayload
+            const response = (await axios.post(this.url, {
+                serviceType,
+                requestRef,
+                Data: data
             }, {
                 headers: {
-                    password: encryptedPassword
+                    Authorization: "Bearer " + !!this.accessToken ? this.accessToken : (await this.generateSecret()).data.token
                 }
-            })
-            // plaintext = RSA decrypt password with our privateKey
-            const plaintext = RsaEncryption.decrypt(encryptedResponse.password, this.privateKey).toString()
-            // data = AES decrypt data with plaintext
-            const aesResponse = await AesEncryption.decrypt(encryptedResponse.data, plaintext)
-            return ResponseHandler.success(JSON.parse(aesResponse))
+            })).data
+            return ResponseHandler.success(response)
         } catch (e: any) {
             return ResponseHandler.error(e)
         }
