@@ -12,7 +12,7 @@ const fs = require("fs");
 
 
 const email = ""
-const clientKey = "name-of-private-key-file";
+const clientKey = "n";
 const accessToken = ""
 const kuda  = new Kuda({
     email: email,
@@ -20,7 +20,7 @@ const kuda  = new Kuda({
     accessToken: accessToken
 },false)
 const reference  = Math.floor(Math.random() * 1000000000000 + 1).toString()
-kuda.request('Admin_Retrieve_Virtual_Accounts',reference ,{
+kuda.request('ADMIN_MAIN_ACCOUNT_TRANSACTIONS',reference ,{
     PageSize: 10,
     PageNumber: 1
 }).then(

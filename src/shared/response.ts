@@ -5,15 +5,10 @@ export class ResponseHandler {
     static success(data: any): Promise<IResponse> {
         return Promise.resolve({
             status : true,
-            message : data.Message,
+            message : data.message,
             data : {
-                ...data.Data,
-                TransactionReference : data?.TransactionReference ? data.TransactionReference : undefined
+                ...data.data,
             },
-            meta : {
-                ResponseCode : data?.ResponseCode ? data.ResponseCode : undefined,
-                RequestReference : data?.RequestReference ? data.RequestReference : undefined
-            }
         });
     }
 
